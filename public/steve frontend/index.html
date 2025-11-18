@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Image Annotation System</title>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 30px;
+    }
+
+    form#uploadForm {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    input[type="file"],
+    input[type="text"] {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    button[type="submit"] {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #2980b9;
+    }
+
+    #imageGallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .image-card {
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px;
+      width: 200px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .image-card img {
+      max-width: 100%;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+
+    .label-input {
+      width: 100%;
+      padding: 6px;
+      margin: 6px 0;
+      font-size: 13px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .image-card button {
+      padding: 6px 10px;
+      margin-top: 4px;
+      font-size: 13px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .image-card button:first-of-type {
+      background-color: #27ae60;
+      color: white;
+      margin-right: 6px;
+    }
+
+    .image-card button:first-of-type:hover {
+      background-color: #1e8449;
+    }
+
+    .image-card button:last-of-type {
+      background-color: #e74c3c;
+      color: white;
+    }
+
+    .image-card button:last-of-type:hover {
+      background-color: #c0392b;
+    }
+
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 30px;
+      color: #3498db;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Image Label Tool</h1>
+
+  <form id="uploadForm" method="POST" action="/api/upload" enctype="multipart/form-data">
+    <input type="file" id="imageInput" accept="image/*" required />
+    <input type="text" id="labelInput" placeholder="Add Label" required />
+    <button type="submit">Upload</button>
+  </form>
+
+  <div id="imageGallery"></div>
+
+  <a href="gallery.html">Gallery</a>
+
+  <script src="dist/script.js"></script>
+</body>
+</html>

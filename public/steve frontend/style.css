@@ -1,0 +1,21 @@
+body {
+  font-family: sans-serif;
+  padding: 20px;
+}
+
+#imageGallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.image-card {
+  border: 1px solid #ccc;
+  padding: 10px;
+  width: 200px;
+}
+
+.image-card img {
+  width: 100%;
+  height: auto;
+}
