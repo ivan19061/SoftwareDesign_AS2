@@ -2,6 +2,7 @@ import express from 'express';
 import multer from 'multer';
 import { db } from './db';
 import { ImageMessager } from './prepare';
+import cors from "cors";
 
 const imageMessager = new ImageMessager();
 
@@ -29,7 +30,7 @@ app.use(express.static('public'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use('/uploads', express.static("src/uploads"))
-
+app.use(cors());
 app.listen(8100, () => {
     console.log(`Server running on port ${port}`)
 })
