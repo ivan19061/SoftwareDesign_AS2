@@ -26,7 +26,7 @@ VALUES (:image_id, :label_id)
 `)
 
 export class ImageMessager {
-    uploadDir = "./upload";
+    uploadDir = "./uploads";
 
     constructor() {
         this.init();
@@ -64,7 +64,7 @@ export class ImageMessager {
     addLabel(image_id: number, labels: string[]) {
         const transaction = db.transaction((labels) => {
             for (const label of labels) {
-                //add label
+                // add label
                 // labels table: name
                 // get label_id
                 // annotations table: image_id label_id

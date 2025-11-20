@@ -1,17 +1,21 @@
-import express from 'express';
-import multer from 'multer';
-import { db } from './db';
-import { ImageMessager } from './prepare';
+import express from 'express'
+import multer from 'multer'
+import { db } from './db.js'
+import { ImageMessager } from './prepare'
 import cors from "cors";
-
-const imageMessager = new ImageMessager();
-
-const app = express();
-const port = 8100;
+import {annotationRoute} from './api/annotation'
+import {imageRoute} from './api/image'
+import {labelRoute} from './api/label'
 
 
-const storage = multer.memoryStorage();
-const upload = multer({
+
+let imageMessager = new ImageMessager();
+let app = express();
+
+
+
+let  storage = multer.memoryStorage();
+let  uploads = multer({
     storage: storage,
     limits: {
         fileSize: 10 * (1024 ** 2)
@@ -26,11 +30,23 @@ const upload = multer({
     }
 })
 
+app.use('/uploads', express.static("uploads"))
 app.use(express.static('public'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use('/uploads', express.static("src/uploads"))
-app.use(cors());
-app.listen(8100, () => {
+app.use(cors())
+
+app.use('/api',imageRoute)
+app.use('/api',annotationRoute)
+app.use('/api',labelRoute)
+
+let  port = 8100;
+app.listen(port, () => {
+   
     console.log(`Server running on port ${port}`)
 })
+
+function mkdirSync(arg0: string, arg1: { recursive: boolean; }) {
+    throw new Error('Function not implemented.');
+}
