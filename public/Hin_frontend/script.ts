@@ -1,4 +1,4 @@
-const backendUrl: string = 'http://localhost:3000';
+const backendUrl: string = 'http://localhost:8100';
 
 // DOM Elements
 const imageUpload = document.getElementById('imageUpload') as HTMLInputElement;
