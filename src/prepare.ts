@@ -5,18 +5,19 @@ import path from 'path';
 export const insertImage = db.prepare(`
 INSERT INTO images (filename, file_size, mime_type)
 VALUES (:filename, :file_size, :mine_type)
+RETURNING id
 `)
 
 export const findImageByFilename = db.prepare(`
-    SELECT id, filename, file_size, mime_type, upload_date ,description
+    SELECT id, filename, file_size, mime_type, upload_time ,description
     FROM images
     WHERE filename = :filename
 `)
 
 export const listImages = db.prepare(`
-    SELECT id, filename, file_size, mime_type, upload_date, description
+    SELECT id, filename, file_size, mime_type, upload_time, description
     FROM images
-    ORDER BY upload_date DESC
+    ORDER BY upload_time DESC
 `)
 //listImages.all()
 
@@ -58,6 +59,8 @@ export class ImageMessager {
         if (labels.length > 0) {
             this.addLabel(imageID, labels);
         }
+
+        return imageID;
     }
 
 
@@ -101,8 +104,9 @@ export class ImageMessager {
     }
 }
 
-insertImage.run({
-    filename: "",
-    file_size: 999,
-    mine_type: "jpg"
-})
+
+// insertImage.run({
+//     filename: "",
+//     file_size: 999,
+//     mine_type: "jpg"
+// })
