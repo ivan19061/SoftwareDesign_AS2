@@ -7,12 +7,10 @@ let imageRoute = Router()
 // Simple in-memory insert_image stub to satisfy the missing symbol during compilation.
 // Replace this with your real DB
 let insert_image = db.prepare(/*sql*/ `
-INSERT INTO images (filename, file_size, mime_type)
-VALUES (:filename, :file_size, :mime_type)
+INSERT INTO images (filename, file_size, mime_type, upload_time)
+VALUES (:filename, :file_size, :mime_type, :upload_time)
 RETURNING id
 `)
-
-
 
 imageRoute.post('/upload-image', async (req, res) => {
     try {
@@ -22,7 +20,7 @@ imageRoute.post('/upload-image', async (req, res) => {
         if (!filename) {
             throw new Error('No File uploaded');
         }
-        let result = insert_image.get({ filename: filename, file_size: 0, mime_type: "image/jpg" })
+        let result = insert_image.get({ filename: filename, file_size: 0, mime_type: "image/jpg", upload_time: Date.now()  })
         res.status(200)
         res.json({ image_id: result.id })
     } catch (error) {
@@ -31,6 +29,9 @@ imageRoute.post('/upload-image', async (req, res) => {
         res.json({ error: String(error) })
     }
 })
+
+
+
 
 
 

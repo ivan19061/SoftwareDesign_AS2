@@ -6,6 +6,7 @@ import cors from "cors";
 import {annotationRoute} from './api/annotation'
 import {imageRoute} from './api/image'
 import {labelRoute} from './api/label'
+import { mkdirSync } from 'fs';
 
 
 
@@ -30,6 +31,8 @@ let  uploads = multer({
     }
 })
 
+
+mkdirSync('uploads',{recursive:true})
 app.use('/uploads', express.static("uploads"))
 app.use(express.static('public'))
 app.use(express.json())
@@ -46,7 +49,3 @@ app.listen(port, () => {
 
     console.log(`Server running on port ${port}`)
 })
-
-function mkdirSync(arg0: string, arg1: { recursive: boolean; }) {
-    throw new Error('Function not implemented.');
-}

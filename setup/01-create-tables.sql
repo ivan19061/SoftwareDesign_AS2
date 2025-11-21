@@ -13,7 +13,8 @@ CREATE TABLE IF NOT EXISTS labels (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL UNIQUE,
     color TEXT DEFAULT '#3B82F6',
-    created_time DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+ 
 );
 
 -- Annotations table: Link images to labels (many-to-many relationship)
