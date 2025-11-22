@@ -835,3 +835,19 @@ nav a:active {
 button, a, .card, .image-card {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+複製
+#image-element {
+    border-radius: 20px;
+ 
+}
+
+/* 或者如果你想要整個 image-frame 容器也有圓角 */
+.image-frame {
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.image-frame img {
+   border-radius: 20px;
+}
