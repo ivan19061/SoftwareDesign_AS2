@@ -32,15 +32,16 @@
         <section class="card" id="image-preview">
             <h2>Preview</h2>
             <div class="image-frame">
-                <img id="image-element" alt="dataset image preview" hidden>
+                <img id="image-element" alt="Dataset image preview" hidden>
             </div>
         </section>
+
         <section class="card" id="label-managent">
             <p id="image-description"></p>
             <h2>Labels</h2>
             <form id="assign-form" aria-describedby="form-status">
                 <label for="label-select">
-                    Assign labels
+                    Assign label
                     <select id="label-select" name="label_id"></select>
                 </label>
                 <button type="submit">Add Label</button>
@@ -49,6 +50,9 @@
             <ul class="labels-list" id="assigned-labels"></ul>
             <p id="labels-empty" hidden>No Labels assigned yet.</p>
         </section>
+
+
+
     </main>
 
 
@@ -93,38 +97,7 @@
             }
         }
 
-
-        async function loadImageDetails() {
-
-            try {
-                const response = await fetch(`/api/image/${imageId}`);
-                const data = await response.json();
-                if (!response.ok) {
-                    throw new Error(data.message || 'Failed to load image details');
-                }
-
-                titleEl.textContent = data.iamge.filename
-                descEl, textContent = `Uploaded ${new Date(data.image.upload_time).toLocaleString()}`
-                imageEl.src = `/uploads/${encodeURIComponent(data.image, filename)}`
-                imageEL.hidden = false
-                renderAssignedlabels(data.labels)
-            } catch (error) {
-
-                titleEl.textContent = 'Image not found'
-                descEl.textContent = error instanceof Error ? error.message :
-                    imageEl.hidden = true
-                form.hidden = true
-                labelsEmpty.hidden = false
-                labelsEmpty.textContent = 'Unable to load labels.'
-            }
-
-
-
-
-        }
-
-
-        async function loadLabelOptions() {
+         async function loadLabelOptions() {
             try {
                 const response = await fetch('/api/labels')
                 const data = await response.json()
@@ -162,6 +135,37 @@
             }
         }
 
+        async function loadImageDetails() {
+
+            try {
+                const response = await fetch(`/api/image/${imageId}`);
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to load image details');
+                }
+
+                titleEl.textContent = data.iamge.filename
+                descEl, textContent = `Uploaded ${new Date(data.image.upload_time).toLocaleString()}`
+                imageEl.src = `/uploads/${encodeURIComponent(data.image, filename)}`
+                imageEL.hidden = false
+                renderAssignedlabels(data.labels)
+            } catch (error) {
+
+                titleEl.textContent = 'Image not found'
+                descEl.textContent = error instanceof Error ? error.message :
+                    imageEl.hidden = true
+                form.hidden = true
+                labelsEmpty.hidden = false
+                labelsEmpty.textContent = 'Unable to load labels.'
+            }
+
+
+
+
+        }
+
+       
+
         form.addEventListener('submit', async (event) => {
             event.preventDefault()
             const submitButton = form.querySelector('button[type="submit"]')
@@ -195,12 +199,49 @@
                 submitButton.disabled = false
             }
 
-
         })
 
 
 
+        labelsList.addEventListener('click', async (event) => {
+            const target = event.target
+            if (!(target instanceof HTMLButtonElement)) {
+                return
+            }
 
+            const labelId = Number(target.dataset.labelId)
+            if (!Number.isInteger(labelId)) {
+                return
+            }
+
+
+            target.disabled = true
+            try {
+                const response = await fetch(`/api/images/${imageId}/labels/${labelId}`, {
+                    method: 'DELETE',
+                })
+                const data = await response.json()
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to remove label')
+                }
+                statusEl.textContent = 'Label removed.'
+                await loadImageDetails()
+            } catch (error) {
+                statusEl.textContent = `Error: ${error instanceof Error ? error.message : String(error)
+                    }`
+            } finally {
+
+
+            }
+        }
+    )
+
+
+        Promise.all([loadLabelOptions(),loadImageDetails()]).catch((error)=>{
+            
+        statusEl.textContent = error instanceof Error ? error.message : String(error)
+        })
+        
 
 
     </script>
