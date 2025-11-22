@@ -50,60 +50,55 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        const listEl = document.getElementById('image-items');
-        const statusEl = document.getElementById('status');
+    const listEl = document.getElementById('image-items');
+    const statusEl = document.getElementById('status');
 
-        async function loadImages() {
-            listEl.innerHTML = '';
-            statusEl.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Loading images...';
-            statusEl.className = 'alert alert-info';
+    async function loadImages() {
+        listEl.innerHTML = '';
+        statusEl.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Loading images...';
+        statusEl.className = 'alert alert-info';
 
-            try {
-                const response = await fetch('/api/images');
-                const data = await response.json();
-                if (!response.ok) {
-
-                    throw new Error(data.message || 'Failed to load images');
-                }
-                if (!data.images || data.images.length === 0) {
-                    statusEl.innerHTML = /*html*/ `No images uploaded yet.<a href="upload.html">upload one now</a>`
-                    return;
-                }
-
-                statusEl.textContent = `Total ${data.images.length} images`;
-                for (const image of data.images) {
-                    const item = document.createElement('li');
-                    item.className = 'data-item mb-3 p-3 border rounded';
-                    item.innerHTML = /*html*/ `
-                    <a href="image.html?id=${encodeURIComponent(image.id)}" class="list-link images-item">
-                            <img
-                         src="/uploads/${encodeURIComponent(image.filename)}" 
-                         alt=" Preview of ${(image.filename)}"                 
-                         class="thumbnail"
-                         loading="lazy"
-                            >
-                         <span class="image-meta">
-                         <span class="primary">${image.filename}</span>
-                         <span class="secondary">
-                            Uploaded on ${new Date(image.upload_time).toLocaleString()}.${image.labels_count} labels
-                          </span>
-                         </span>
-                    </a>
-                    `
-                    listEl.appendChild(item)
-                }
-            } catch (error) {
-                statusEl.textContent = error instanceof Error ? error.message : String(error);
+        try {
+            const response = await fetch('/api/images');
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to load images');
+            }
+            if (!data.images || data.images.length === 0) {
+                statusEl.innerHTML = /*html*/ `No images uploaded yet. <a href="upload.html">Upload one now</a>`;
+                return;
             }
 
-
-
+            statusEl.textContent = `Total ${data.images.length} images`;
+            for (const image of data.images) {
+                const item = document.createElement('li');
+                item.className = 'data-item mb-3 p-3 border rounded';
+                item.innerHTML = /*html*/ `
+                <a href="image.html?id=${encodeURIComponent(image.id)}" class="list-link images-item">
+                        <img
+                     src="/uploads/${encodeURIComponent(image.filename)}" 
+                     alt="Preview of ${(image.filename)}"                 
+                     class="thumbnail"
+                     loading="lazy"
+                        >
+                     <span class="image-meta">
+                     <span class="primary">${image.filename}</span>
+                     <span class="secondary">
+                        Uploaded on ${new Date(image.upload_time).toLocaleString()}. ${image.labels_count} labels
+                      </span>
+                     </span>
+                </a>
+                `;
+                listEl.appendChild(item);
+            }
+        } catch (error) {
+            statusEl.textContent = error instanceof Error ? error.message : String(error);
+            statusEl.className = 'alert alert-danger';
         }
+    }
 
-
-        loadImages();
-
-    </script>
+    loadImages();
+</script>
 </body>
 
 </html>

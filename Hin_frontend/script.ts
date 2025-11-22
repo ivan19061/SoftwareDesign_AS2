@@ -39,7 +39,7 @@ function showStatus(element: HTMLElement, message: string, isError: boolean = fa
 
 // Load all images and render UI
 function loadImages(): void {
-  fetch(`${backendUrl}/api/images`)
+  fetch(`${backendUrl}/api/image`)
     .then(res => {
       if (!res.ok) throw new Error('Failed to fetch images');
       return res.json();
@@ -147,7 +147,7 @@ uploadBtn.addEventListener('click', () => {
   const formData = new FormData();
   formData.append('image', file);
 
-  fetch(`${backendUrl}/api/images`, {
+  fetch(`${backendUrl}/api/image`, {
     method: 'POST',
     body: formData
   })
@@ -180,7 +180,7 @@ addLabelBtn.addEventListener('click', () => {
     return;
   }
 
-  fetch(`${backendUrl}/api/images/${selectedImageId}/labels`, {
+  fetch(`${backendUrl}/api/image/${selectedImageId}/labels`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -204,7 +204,7 @@ addLabelBtn.addEventListener('click', () => {
 
 // Delete an image
 function deleteImage(imageId: string): void {
-  fetch(`${backendUrl}/api/images/${imageId}`, {
+  fetch(`${backendUrl}/api/image/${imageId}`, {
     method: 'DELETE'
   })
     .then(res => {
@@ -223,7 +223,7 @@ function deleteImage(imageId: string): void {
 
 // Delete a label from an image
 function deleteLabelFromImage(imageId: string, labelId: string): void {
-  fetch(`${backendUrl}/api/images/${imageId}/labels/${labelId}`, {
+  fetch(`${backendUrl}/api/image/${imageId}/labels/${labelId}`, {
     method: 'DELETE'
   })
     .then(res => {

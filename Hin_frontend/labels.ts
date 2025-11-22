@@ -1,5 +1,5 @@
 async function fetchImages() {
-  const res = await fetch('/api/images');
+  const res = await fetch('/api/image');
   const images = await res.json();
 
   const gallery = document.getElementById('labelsGallery')!;

@@ -339,163 +339,11 @@ nav a:active {
   box-shadow: var(--shadow-lg);
 }
 
-
-
 .card-body {
   padding: 2rem;
 }
 
 /* Back to Top Button - Enhanced Animation */
-.btn-back-to-top {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: var(--gradient-primary);
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  cursor: pointer;
-  box-shadow: var(--shadow-lg);
-  z-index: 1000;
-  opacity: 0;
-  visibility: hidden;
-  transform: scale(0) rotate(-180deg);
-  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  overflow: hidden;
-}
-
-.btn-back-to-top.show {
-  opacity: 1;
-  visibility: visible;
-  transform: scale(1) rotate(0deg);
-}
-
-.btn-back-to-top:hover {
-  transform: scale(1.1) rotate(360deg);
-  box-shadow: 0 8px 30px rgba(102, 126, 234, 0.5);
-}
-
-.btn-back-to-top:active {
-  transform: scale(0.95);
-}
-
-.btn-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.2rem;
-  position: relative;
-  z-index: 2;
-}
-
-.btn-content i {
-  font-size: 1.8rem;
-  animation: bounce 2s infinite;
-}
-
-.btn-content span {
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-@keyframes bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
-}
-
-/* Ripple Effect */
-.btn-ripple {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.5);
-  transform: translate(-50%, -50%);
-  transition: width 0.6s, height 0.6s;
-}
-
-.btn-back-to-top:active .btn-ripple {
-  width: 200px;
-  height: 200px;
-}
-
-/* Pulse Animation on Scroll */
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 15px rgba(102, 126, 234, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(102, 126, 234, 0);
-  }
-}
-
-.btn-back-to-top.pulse {
-  animation: pulse 2s infinite;
-}
-
-/* Mobile Responsiveness */
-@media (max-width: 768px) {
-  .container {
-    padding: 1rem 1rem 4rem;
-  }
-
-  .main-title {
-    font-size: 1.8rem;
-  }
-
-  nav ul {
-    justify-content: center;
-    padding: 1rem;
-  }
-
-  nav a {
-    font-size: 0.85rem;
-    padding: 0.5rem 1rem;
-  }
-
-  section {
-    padding: 1.5rem;
-  }
-
-  .btn-back-to-top {
-    width: 50px;
-    height: 50px;
-    bottom: 1.5rem;
-    right: 1.5rem;
-  }
-
-  .btn-content i {
-    font-size: 1.5rem;
-  }
-
-  .btn-content span {
-    font-size: 0.6rem;
-  }
-
-  #imagesGrid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Smooth Transitions for All Interactive Elements */
-button, a, .card, .image-card {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
 .btn-back-to-top {
   position: fixed;
   bottom: 30px;
@@ -628,8 +476,257 @@ button, a, .card, .image-card {
   transform: scale(0.95);
 }
 
-/* 響應式設計 */
+/* Thumbnail */
+.thumbnail {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  border: 1px solid #d0d7de;
+  background: #f8fafc;
+}
+
+/* Data Lists */
+.data-list {
+  list-style: none; 
+  padding-left: 0;  
+}
+
+.data-item {
+  list-style: none; 
+}
+
+#data-item {
+  list-style: none;
+}
+
+#image-items li:before {
+  list-style: none;  
+}
+
+#image-item li::before {
+  padding: 0px;
+}
+
+/* File Upload Wrapper */
+#fileUploadWrapper {
+  border: 2px dashed #8400ff; 
+  padding: 20px;             
+  text-align: center;      
+  border-radius: 8px;       
+  cursor: pointer;            
+}
+
+/* ========================================
+   LABELS PAGE SPECIFIC STYLES
+   ======================================== */
+
+/* Label Form Section */
+.label-form-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 2rem;
+  border-radius: 12px;
+  color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.label-form-section h2 {
+  color: white;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.label-form {
+  max-width: 600px;
+}
+
+.label-form .form-label {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: white;
+}
+
+.label-form .form-control {
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.label-form .form-control:focus {
+  border-color: white;
+  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
+  background: white;
+}
+
+.label-form .form-control::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+.label-form .btn-primary {
+  background: white;
+  color: #667eea;
+  border: none;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.label-form .btn-primary:hover {
+  background: #f8f9fa;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.label-form .btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Existing Labels Section */
+.existing-labels-section {
+  margin-top: 2rem;
+}
+
+.existing-labels-section h2 {
+  color: #333;
+  font-weight: 600;
+  border-bottom: 3px solid #667eea;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.labels-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.label-item {
+  background: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.label-item:hover {
+  background: white;
+  border-color: #667eea;
+  transform: translateX(5px);
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.15);
+}
+
+.label-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.label-name i {
+  color: #667eea;
+  font-size: 1.2rem;
+}
+
+.label-meta {
+  font-size: 0.9rem;
+  color: #666;
+  padding-left: 1.7rem;
+}
+
+/* Status Messages for Labels Page */
+.status-message {
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.status-message.alert-info {
+  background: #d1ecf1;
+  border: 1px solid #bee5eb;
+  color: #0c5460;
+}
+
+.status-message.alert-success {
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  color: #155724;
+}
+
+.status-message.alert-warning {
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  color: #856404;
+}
+
+.status-message.alert-danger {
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  color: #721c24;
+}
+
+/* Spinner */
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.15em;
+}
+
+/* Empty state for labels list */
+.labels-list:empty::after {
+  content: "No labels to display";
+  display: block;
+  text-align: center;
+  padding: 2rem;
+  color: #999;
+  font-style: italic;
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
 @media (max-width: 768px) {
+  .container {
+    padding: 1rem 1rem 4rem;
+  }
+
+  .main-title {
+    font-size: 1.8rem;
+  }
+
+  nav ul {
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  nav a {
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+  }
+
+  section {
+    padding: 1.5rem;
+  }
+
   .btn-back-to-top {
     width: 50px;
     height: 50px;
@@ -648,6 +745,27 @@ button, a, .card, .image-card {
   .btn-progress {
     width: 56px;
     height: 56px;
+  }
+
+  #imagesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Labels page responsive */
+  .label-form-section {
+    padding: 1.5rem;
+  }
+
+  .label-form .btn-primary {
+    width: 100%;
+  }
+
+  .label-item {
+    padding: 1rem;
+  }
+
+  .label-name {
+    font-size: 1rem;
   }
 }
 
@@ -672,6 +790,10 @@ button, a, .card, .image-card {
     height: 51px;
   }
 }
+
+/* ========================================
+   ACCESSIBILITY & PREFERENCES
+   ======================================== */
 
 /* 無障礙設計 */
 .btn-back-to-top:focus {
@@ -708,52 +830,8 @@ button, a, .card, .image-card {
     transform: translateY(0) scale(1);
   }
 }
-:root {
-  color-scheme: light;
-  scroll-behavior: smooth;
-}
 
-
-.thumbnail {
-    width: 96px;
-    height: 96px;
-    object-fit: cover;
-    border-radius: 0.5rem;
-    border: 1px solid #d0d7de;
-    background: #f8fafc;
-}
-
-
-
-#data-item {
-    list-style: none;
-}
-
-
-#image-items li:before{
-  list-style: none;  
-
-}
-
-#image-item li::before {
-  padding: 0px;
-
-}
-
-#fileUploadWrapper {
-  border: 2px dashed #8400ff; 
-  padding: 20px;             
-  text-align: center;      
-  border-radius: 8px;       
-  cursor: pointer;            
-}
-
-
-.data-list {
-    list-style: none; 
-    padding-left: 0;  
-}
-
-.data-item {
-    list-style: none; 
+/* Smooth Transitions for All Interactive Elements */
+button, a, .card, .image-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }

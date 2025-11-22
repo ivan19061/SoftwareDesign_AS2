@@ -1,39 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Upload Image - AI Dataset Annotator</title>
-  <!-- Bootstrap 5 CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  </link>/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Bootstrap Icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"> 
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="style.css">
+    <title>Manage Labels - AI Dataset Annotation</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="style.css">
+   
 </head>
-<body>    
 
-<button id="backToTop" class="btn-back-to-top" aria-label="返回頂端" title="返回頂端">
-          <div class="btn-content">
-            <i class="bi bi-arrow-up-circle-fill"></i>
-            <span class="btn-text"><h2>TOP</h2></span>
-          </div>
-          <div class="btn-ripple"></div>
-          <div class="btn-progress"></div>
-        </button>
+<body>
+    <div class="container">
+        <h1 id="main-title" class="mt-5 mb-3">
+            <i class="bi bi-tags"></i> Manage Labels
+        </h1>
 
-<section class="images-section">
-  <h2><i class="bi bi-collection"></i> Labeled Images</h2>
-  <div id="labelsGallery" class="d-flex flex-wrap"></div>
-</section>
+        <main>
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <ul>
+                        <li class="breadcrumb-item"><a href="index.html"><i class="bi bi-house-door"></i> Home</a></li>
+                        <li class="breadcrumb-item"><a href="upload.html"><i class="bi bi-cloud-upload"></i> Upload Images</a></li>
+                        <li class="breadcrumb-item active"><a href="labels.html"><i class="bi bi-tags"></i> Manage Labels</a></li>
+                        <li class="breadcrumb-item"><a href="images.html"><i class="bi bi-image"></i> View Images</a></li>
+                    </ul>
+                </ol>
+            </nav>
 
-<script src="dist/labels.js"></script>
+            <section class="card mb-5 shadow-sm">
+                <div class="card-body p-4">
+                    <p class="lead text-muted mb-4">
+                        Browse current labels and add new ones to keep your annotation vocabulary aligned across the team.
+                    </p>
 
-  
+                    <!-- Add New Label Section -->
+                    <div class="label-form-section mb-5">
+                        <h2 class="mb-3"><i class="bi bi-plus-circle"></i> Add New Label</h2>
+                        <form id="add-label-form" class="label-form">
+                            <div class="form-group mb-3">
+                                <label for="label-name-input" class="form-label">Label name</label>
+                                <input 
+                                    type="text" 
+                                    id="label-name-input" 
+                                    class="form-control" 
+                                    placeholder="e.g. pedestrian"
+                                    maxlength="50"
+                                    required
+                                >
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="create-label-btn">
+                                <i class="bi bi-check-circle"></i> Create
+                            </button>
+                        </form>
+                        <div id="add-label-status" class="status-message mt-3"></div>
+                    </div>
+
+                    <!-- Existing Labels Section -->
+                    <div class="existing-labels-section">
+                        <h2 class="mb-4"><i class="bi bi-collection"></i> Existing Labels</h2>
+                        <div id="labels-status" class="status-message mb-3"></div>
+                        <ul class="labels-list" id="labels-list"></ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const labelForm = document.getElementById('add-label-form');
+        const labelNameInput = document.getElementById('label-name-input');
+        const addLabelStatus = document.getElementById('add-label-status');
+        const labelsStatus = document.getElementById('labels-status');
+        const labelsList = document.getElementById('labels-list');
+        const createBtn = document.getElementById('create-label-btn');
+
+        // Load existing labels
+        async function loadLabels() {
+            labelsList.innerHTML = '';
+            labelsStatus.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Loading labels...';
+            labelsStatus.className = 'status-message alert alert-info';
+
+            try {
+                const response = await fetch('/api/labels');
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to load labels');
+                }
+
+                if (!data.labels || data.labels.length === 0) {
+                    labelsStatus.innerHTML = 'No labels created yet. Add your first label above.';
+                    labelsStatus.className = 'status-message alert alert-warning';
+                    return;
+                }
+
+                labelsStatus.innerHTML = `Total ${data.labels.length} labels`;
+                labelsStatus.className = 'status-message alert alert-success';
+
+                for (const label of data.labels) {
+                    const item = document.createElement('li');
+                    item.className = 'label-item';
+                    const createdDate = new Date(label.created_time);
+                    item.innerHTML = `
+                        <div class="label-content">
+                            <div class="label-name">
+                                <i class="bi bi-tag-fill"></i> ${escapeHtml(label.name)}
+                            </div>
+                            <div class="label-meta">
+                                Created ${createdDate.toLocaleDateString()} ${createdDate.toLocaleTimeString()}
+                            </div>
+                        </div>
+                    `;
+                    labelsList.appendChild(item);
+                }
+            } catch (error) {
+                labelsStatus.textContent = error instanceof Error ? error.message : String(error);
+                labelsStatus.className = 'status-message alert alert-danger';
+            }
+        }
+
+        // Add new label
+        labelForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const labelName = labelNameInput.value.trim();
+            if (!labelName) {
+                addLabelStatus.textContent = 'Please enter a label name';
+                addLabelStatus.className = 'status-message alert alert-warning';
+                return;
+            }
+
+            createBtn.disabled = true;
+            addLabelStatus.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating label...';
+            addLabelStatus.className = 'status-message alert alert-info';
+
+            try {
+                const response = await fetch('/api/labels', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name: labelName })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to create label');
+                }
+
+                addLabelStatus.innerHTML = `<i class="bi bi-check-circle"></i> Label "${escapeHtml(labelName)}" created successfully!`;
+                addLabelStatus.className = 'status-message alert alert-success';
+                labelNameInput.value = '';
+                
+                // Reload labels list
+                await loadLabels();
+            } catch (error) {
+                addLabelStatus.textContent = error instanceof Error ? error.message : String(error);
+                addLabelStatus.className = 'status-message alert alert-danger';
+            } finally {
+                createBtn.disabled = false;
+            }
+        });
+
+        // Utility function to escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Load labels on page load
+        loadLabels();
+    </script>
 </body>
 
-<script>
-  
-</script>
 </html>
