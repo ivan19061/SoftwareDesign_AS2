@@ -1,41 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+    <title>Image AI Dataset Annotation</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Details - AI Dataset Annotator</title>
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    </link>/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="style.css">
+     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <header>
-        <h1>Image Details</h1>
-    </header>
-            <nav aria-label="breadcrumb" class="mb-4">
+        <h1 id="image-title"></h1>Image Details</h1>
+               <nav aria-label="breadcrumb" class="mb-4">
                 <ol class="breadcrumb">
                     <ul>
                         <li class="breadcrumb-item"><a href="index.html"><i class="bi bi-house-door"></i> Home</a></li>
                         <li class="breadcrumb-item"><a href="upload.html"><i class="bi bi-cloud-upload"></i> Upload Image</a></li>
                         <li class="breadcrumb-item"><a href="labels.html"><i class="bi bi-tags"></i> Manage Labels</a></li>
-                        <li class="breadcrumb-item"><a href="image.html"><i class="bi bi-image"></i> Manage Images</a></li>
+                        <li class="breadcrumb-item"><a href="images.html"><i class="bi bi-image"></i> Manage Images</a></li>
                     </ul>
-
-                   
+                    <li class="breadcrumb-item active" aria-current="page">View Images</li>
                 </ol>
             </nav>
+   </header>
+    <main>
+        <section class="card" id="image-preview">
+            <h2>Preview</h2>
+           <div class="image-frame">
+            <img id="image-element" alt = "dataset image preview" hidden>
+           </div>
+        </section>
+        <section class="card" id="label-managent">
+        <h2>Labels</h2> 
+        <form id="assign-form" aria-describedby="form-status">
+            <label for="label-select">
+                Assign labels
+                <select id="label-select" name="label_id"></select>
+            </label>
+            <button type="submit">Add Label</button>
+        </form>
+        <p id="form-status" role="staus" aria-live="polite"></p>
+        <ul class="labels-list" id="assigned-labels"></ul>
+        <p id="labels-empty" hidden>No Labels assigned yet.</p>
+       </section>
+   </main> 
 
-
-</body>
-
+    
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    
+const params = new URLSearchParams(window.location.search);
+const imageId = Number(params.get('id'));
+const titleEl = document.getElementById('image-title');
+const descEl = document.getElementById('image-description');
+const imageEl = document.getElementById('image-element');
+const labelsList = document.getElementById('assigned-labels');
+const labelsEmpty = document.getElementById('labels-empty');
+const labelSelect = document.getElementById('label-select');
+const form = document.getElementById('assign-form');
+const statusEl = document.getElementById('form-status');
+
+if (!Number.isInteger(imageId) || imageId <= 0) {
+    titleEl.textContent = 'Image Not Found'
+    descEl.textContent = 'Invalid images ID.'
+    form.hidden = true;
+    labelsEmpty.hidden = true;
+    labelsEmpty.textContent = 'Cannot load labels for invalid image.'
+    throw new Error('Invalid image ID');
+} 
+
+function renderAssignedLabels(labels) {
+    labelsList.innerHTML = ''
+    if (!labels || labels.length === 0) {
+        labelsEmpty.hidden = false
+        return
+    }
+    labelsEmpty.hidden = true
+    for (const label of labels) {
+        const item = document.createElement('li')
+        item.innerHTML = `
+            <span class="primary">${label.name}</span>
+            <span class="secondary">Assigned${new Date (label.annotation_time).toLocaleString}</span>
+            <button type = "button" data-label-id="${label.id}" class="danger">Remove</buton>   
+        `
+        labelsList.appendChild(item)
+    }
+}
+
+
+async function loadImageDetails() {
+
+    try {
+        const response = await fetch(`/api/image/${imageId}`);
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.message || 'Failed to load image details');
+        }
+
+        titleEl.textContent =data.iamge.filename
+        descEl,textContent = `Uploaded ${new Date (data.image.upload_time).toLocaleString()}`
+        imageEl.src =`/uploads/${encodeURIComponent(data.image,filename)}`
+        imageEL.hidden = false
+        renderAssignedlabels(data.labels)
+    } catch(error){
+        
+    titleEl.textContent = 'Image not found'
+    descEl.textContent = error instanceof Error ? error.message :
+    imageEl.hidden = true
+    form.hidden = true
+    labelsEmpty.hidden = false
+    labelsEmpty.textContent = 'Unable to load labels.'
+    }
+
+    
+
+
+}
+
+
+async function loadLabelOptions() {
+    try {
+        const response = await fetch('/api/labels')
+        const data = await response.json()
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to load labels')
+        }
+        labelSelect.innerHTML = ''
+        if (!data.labels || data.labels.length === 0) {
+            const option = document.createElement('option')
+            option.textContent = 'No labels available'
+            option.disabled = true
+            option.selected = true
+            labelSelect.appendChild(option)
+            form.querySelector('button[type="submit"]').disabled = true
+            return
+        }
+        
+          
+form.querySelector('button[type="submit"]').disabled = false
+const placeholder = document.createElement('option')
+placeholder.value = ''
+placeholder.textContent = 'Select a label'
+placeholder.disabled = true
+placeholder.selected = true
+labelSelect.appendChild(placeholder)
+for (const label of data.labels) {
+    const option = document.createElement('option')
+    option.value = label.id
+    option.textContent = label.name
+    labelSelect.appendChild(option)
+}
+
+
+catch (error) {
+    statusEl.textContent = error instanceof Error ? error.message : String(error)
+    form.querySelector('button[type="submit"]').disabled = true
+}
+
+ 
+    }
 
 </script>
 
-</html>
+

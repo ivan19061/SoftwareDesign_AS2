@@ -723,12 +723,19 @@ button, a, .card, .image-card {
     background: #f8fafc;
 }
 
-#image-item li::before{
-  display: none;  
+
+
+#data-item {
+    list-style: none;
+}
+
+
+#image-items li:before{
+  list-style: none;  
 
 }
 
-#image-item li::before{
+#image-item li::before {
   padding: 0px;
 
 }
@@ -739,4 +746,14 @@ button, a, .card, .image-card {
   text-align: center;      
   border-radius: 8px;       
   cursor: pointer;            
+}
+
+
+.data-list {
+    list-style: none; 
+    padding-left: 0;  
+}
+
+.data-item {
+    list-style: none; 
 }

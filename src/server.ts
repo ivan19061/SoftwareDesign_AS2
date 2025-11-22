@@ -8,24 +8,9 @@ import { imageRoute } from './api/image'
 import {labelRoute} from './api/label'
 import { mkdirSync } from 'fs';
 
-let imageMessager = new ImageMessager();
+
 let app = express();
 
-let storage = multer.memoryStorage();
-let uploads = multer({
-    storage: storage,
-    limits: {
-        fileSize: 10 * (1024 ** 2)
-    },
-    fileFilter: (req, file, cb) => {
-        if (file.mimetype.startsWith("image/")) {
-            cb(null, true);
-        } else {
-            cb(null, false);
-            throw new Error("Only image allowed")
-        }
-    }
-})
 
 
 mkdirSync('uploads', {recursive: true})

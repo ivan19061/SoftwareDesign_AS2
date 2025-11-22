@@ -32,10 +32,10 @@ let find_image = db.prepare(/*sql*/`
 
 let list_image_labels = db.prepare(/*sql*/`
     SELECT label_id, 
-    name
-    created_time,
+    labels.name,
+    labels.created_time,
     image_label.id AS image_label_id,
-    image_label.Annotations_time
+    image_label.annotations_time
     FROM  image_label
     JOIN labels ON labels.id = image_label.label_id
     WHERE image_label.image_id = :image_id
@@ -73,15 +73,15 @@ imageRoute.get('/images', (req, res) => {
 })
 
 
-imageRoute.get('/image/:imageId', (req, res) => {
+imageRoute.get('/images/:imageId', (req, res) => {
 try {
     let image_id = Number(req.params.imageId)
     if (!Number.isInteger(image_id)) {
      res.status(400)
      res.json({ error: "Invalid image ID" })
      return    
-    }
-    let image = find_image.get({ image_id })
+    } 
+    let image = find_image.get({ id: image_id })
     if (!image) {
         res.status(404)
         res.json({ error: "Image not found" })
@@ -97,5 +97,5 @@ try {
 
 }    
 })
-
+ 
 export {imageRoute}
