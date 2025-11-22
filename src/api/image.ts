@@ -31,19 +31,19 @@ let find_image = db.prepare(/*sql*/`
 `)
 
 let list_image_labels = db.prepare(/*sql*/`
-    SELECT labels.id, 
-    labels.name
-    labels.created_time,
-    images_label AS image_label_id,
-    images_label.annotation_time
-    FROM  images_label
+    SELECT label_id, 
+    name
+    created_time,
+    image_label.id AS image_label_id,
+    image_label.Annotations_time
+    FROM  image_label
     JOIN labels ON labels.id = image_label.label_id
     WHERE image_label.image_id = :image_id
-    ORDER BY label.name COLLATE NOCASE 
+    ORDER BY labels.name COLLATE NOCASE 
 `)
 
 
-imageRoute.post('/upload-image', async (req, res) => {
+imageRoute.post('/uploads', async (req, res) => {
     try {
         let form = new Formidable({ keepExtensions: true, uploadDir: 'src/uploads' })
         let [fields, files] = await form.parse(req) as any;

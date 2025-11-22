@@ -38,7 +38,7 @@ app.use('/api', imageRoute)
 app.use('/api', annotationRoute)
 app.use('/api', labelRoute)
 
-app.use('/uploads', express.static("uploads"))
+app.use('/uploads', express.static("src/uploads"))
 
 let port = 8100;
 app.listen(port, () => {

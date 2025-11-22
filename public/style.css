@@ -732,3 +732,11 @@ button, a, .card, .image-card {
   padding: 0px;
 
 }
+
+#fileUploadWrapper {
+  border: 2px dashed #8400ff; 
+  padding: 20px;             
+  text-align: center;      
+  border-radius: 8px;       
+  cursor: pointer;            
+}
