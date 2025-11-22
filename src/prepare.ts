@@ -22,7 +22,7 @@ export const listImages = db.prepare(`
 //listImages.all()
 
 export const insertAnnotation = db.prepare(`
-INSERT OR IGNORE INTO annotations (image_id, label_id)
+INSERT OR IGNORE INTO image_label (image_id, label_id)
 VALUES (:image_id, :label_id)
 `)
 
@@ -70,7 +70,7 @@ export class ImageMessager {
                 // add label
                 // labels table: name
                 // get label_id
-                // annotations table: image_id label_id
+                // image_label table: image_id label_id
 
                 // result = insertLabel.run({name: name})
                 // label_id = result.lastInsertRowId

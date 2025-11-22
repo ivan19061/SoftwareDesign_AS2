@@ -712,3 +712,23 @@ button, a, .card, .image-card {
   color-scheme: light;
   scroll-behavior: smooth;
 }
+
+
+.thumbnail {
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    border: 1px solid #d0d7de;
+    background: #f8fafc;
+}
+
+#image-item li::before{
+  display: none;  
+
+}
+
+#image-item li::before{
+  padding: 0px;
+
+}

@@ -4,19 +4,15 @@ import { db } from './db.js'
 import { ImageMessager } from './prepare'
 import cors from "cors";
 import {annotationRoute} from './api/annotation'
-import {imageRoute} from './api/image'
+import { imageRoute } from './api/image'
 import {labelRoute} from './api/label'
 import { mkdirSync } from 'fs';
-
-
 
 let imageMessager = new ImageMessager();
 let app = express();
 
-
-
-let  storage = multer.memoryStorage();
-let  uploads = multer({
+let storage = multer.memoryStorage();
+let uploads = multer({
     storage: storage,
     limits: {
         fileSize: 10 * (1024 ** 2)
@@ -32,20 +28,19 @@ let  uploads = multer({
 })
 
 
-mkdirSync('uploads',{recursive:true})
-app.use('/uploads', express.static("uploads"))
+mkdirSync('uploads', {recursive: true})
 app.use(express.static('public'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-app.use('/uploads', express.static("src/uploads"))
 app.use(cors())
 
-app.use('/api',imageRoute)
-app.use('/api',annotationRoute)
-app.use('/api',labelRoute)
+app.use('/api', imageRoute)  
+app.use('/api', annotationRoute)
+app.use('/api', labelRoute)
 
-let  port = 8100;
+app.use('/uploads', express.static("uploads"))
+
+let port = 8100;
 app.listen(port, () => {
-
     console.log(`Server running on port ${port}`)
 })
