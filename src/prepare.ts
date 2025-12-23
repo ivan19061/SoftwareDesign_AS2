@@ -2,26 +2,26 @@ import { db } from './db';
 import fs from 'fs';
 import path from 'path';
 
-export const insertImage = db.prepare(`
+export const insertImage = db.prepare(/*sql*/`
 INSERT INTO images (filename, file_size, mime_type)
 VALUES (:filename, :file_size, :mine_type)
 RETURNING id
 `)
 
-export const findImageByFilename = db.prepare(`
+export const findImageByFilename = db.prepare(/*sql*/`
     SELECT id, filename, file_size, mime_type, upload_time ,description
     FROM images
     WHERE filename = :filename
 `)
 
-export const listImages = db.prepare(`
+export const listImages = db.prepare(/*sql*/`
     SELECT id, filename, file_size, mime_type, upload_time, description
     FROM images
     ORDER BY upload_time DESC
 `)
 //listImages.all()
 
-export const insertAnnotation = db.prepare(`
+export const insertAnnotation = db.prepare(/*sql*/`
 INSERT OR IGNORE INTO image_label (image_id, label_id)
 VALUES (:image_id, :label_id)
 `)

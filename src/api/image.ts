@@ -4,7 +4,7 @@ import { db } from "../db"
 
 let imageRoute = Router()
 
-let insert_images = db.prepare(/*sql*/ `
+let insert_images = db.prepare(/*sql*/`
     INSERT INTO image (filename, file_size, mime_type)
     VALUES (:filename, :file_size, :mime_type)
     RETURNING id
@@ -23,7 +23,7 @@ let list_images = db.prepare(/*sql*/`
 `)
 
 let find_image = db.prepare(/*sql*/`
-    SELECT id, filename, upload_time
+    SELECT id, filename, upload_time, description
     FROM image
     WHERE id = :id 
 `)
@@ -41,7 +41,6 @@ let list_image_labels = db.prepare(/*sql*/`
     ORDER BY label.name COLLATE NOCASE 
 `)
 
-
 imageRoute.post('/uploads', async (req, res) => {
     try {
         let form = new Formidable({ keepExtensions: true, uploadDir: 'src/uploads' })
@@ -52,15 +51,14 @@ imageRoute.post('/uploads', async (req, res) => {
         }
         let result = insert_images.get({ 
             filename: filename, 
-            file_size: files?.image?.[0]?.size || 0, 
-            mime_type: files?.image?.[0]?.mimetype || "image/jpeg"
-        })
-        res.status(200)
-        res.json({ image_id: result.id })
-    } catch (error) {
-        res.status(500)
-        console.log(error)
-        res.json({ error: String(error) })
+            file_size: files?.image?.[0]?.size, 
+            mime_type: files?.image?.[0]?.mimetype 
+        }) as any;
+        res.status(201)
+        res.json({ message: 'Image uploaded successfully', image_id: result.id })
+    } catch (error: any) {
+        res.status(400)
+        res.json({ error: error.message })
     }
 })
 
@@ -69,34 +67,33 @@ imageRoute.get('/images', (req, res) => {
         let images = list_images.all()
         res.status(200)
         res.json({ images })
-    } catch (error) { 
+    } catch (error: any) {
         res.status(500)
-        res.json({ error: String(error) })
+        res.json({ error: error.message })
     }
 })
 
-
-imageRoute.get('/images/:imageId', (req, res) => {
+imageRoute.get('/images/:id', (req, res) => {
     try {
-        let image_id = Number(req.params.imageId)
-        if (!Number.isInteger(image_id)) {
+        let id = Number(req.params.id)
+        if (!Number.isInteger(id)) {
             res.status(400)
-            res.json({ error: "Invalid image ID" })
-            return    
-        } 
-        let image = find_image.get({ id: image_id })
-        if (!image) {
-            res.status(404)
-            res.json({ error: "Image not found" })
+            res.json({ error: 'Invalid image id' })
             return
         }
-        let labels = list_image_labels.all({ image_id })
+        let image = find_image.get({ id })
+        if (!image) {
+            res.status(404)
+            res.json({ error: 'Image not found' })
+            return
+        }
+        let labels = list_image_labels.all({ image_id: id })
         res.status(200)
         res.json({ image, labels })
-    } catch (error) {
+    } catch (error: any) {
         res.status(500)
-        res.json({ error: String(error) }) 
-    }    
+        res.json({ error: error.message })
+    }
 })
- 
+
 export { imageRoute }

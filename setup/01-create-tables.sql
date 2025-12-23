@@ -3,23 +3,21 @@ CREATE TABLE IF NOT EXISTS image (
     filename TEXT NOT NULL UNIQUE,
     file_size INTEGER NOT NULL,
     mime_type TEXT NOT NULL,
-    upload_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+    upload_time INTEGER DEFAULT (strftime('%s', 'now') * 1000),
     description TEXT
-);  
-
+);
 
 CREATE TABLE IF NOT EXISTS label (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL UNIQUE,
-    created_time DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_time INTEGER DEFAULT (strftime('%s', 'now') * 1000)
 );
-
 
 CREATE TABLE IF NOT EXISTS image_label (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     image_id INTEGER NOT NULL,
     label_id INTEGER NOT NULL,
-    annotation_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+    annotation_time INTEGER DEFAULT (strftime('%s', 'now') * 1000),
     FOREIGN KEY (image_id) REFERENCES image(id) ON DELETE CASCADE,
     FOREIGN KEY (label_id) REFERENCES label(id) ON DELETE CASCADE,
     UNIQUE(image_id, label_id)
