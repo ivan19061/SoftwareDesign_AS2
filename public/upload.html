@@ -5,9 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Upload Image - AI Dataset Annotator</title>
-<!-- Bootstrap 5 CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<!-- Bootstrap Icons -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 <link rel="stylesheet" href="style.css">
 </head>
@@ -27,19 +25,17 @@
     </ul>
   </nav>
 
-  <!-- Upload Image Section -->
   <section class="upload-section" id="upload-image">
     <h2><i class="bi bi-cloud-arrow-up"></i> Upload Image</h2>
     <form id="upload-form" aria-describedby="status">
       <div class="mb-3">
         <label for="imageUpload" class="form-label"></label>
-        <div id="fileUploadWrapper" type="file" name="image" accept="image/*" required class="form-control">
+        <div id="fileUploadWrapper" class="form-control">
           <h1 id="main-title" class="main-title">
             <i class="bi bi-cloud-upload"></i> Upload
           </h1>
         </div>
-        <input id="imageUpload" type="file" name="image" accept="image/*" required class="form-control">
-
+        <input id="imageUpload" type="file" name="image" accept="image/*" required style="display: none;">
       </div>
 
       <div class="mb-3">
@@ -67,23 +63,10 @@
     </div>
   </div>
 
-  <button id="backToTop" class="btn-back-to-top" aria-label="back to top" title="back to top">
-    <div class="btn-content">
-      <i class="bi bi-arrow-up-circle-fill"></i>
-      <span class="btn-text">
-        <h2>TOP</h2>
-      </span>
-    </div>
-    <div class="btn-ripple"></div>
-    <div class="btn-progress"></div>
-  </button>
-
 </div>
 
-<!-- Bootstrap 5 JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-
   const form = document.getElementById('upload-form');
   const status = document.getElementById('status');
   const fileInput = document.getElementById('imageUpload');
@@ -92,16 +75,13 @@
   const labelSelect = document.getElementById('labelSelect');
   const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
-  // 載入 labels
   async function loadLabels() {
     try {
       const response = await fetch('/api/labels');
       const data = await response.json();
 
-      // 清空選項
       labelSelect.innerHTML = '<option value="" disabled selected>Select a label</option>';
 
-      // 添加 labels
       if (data.labels && data.labels.length > 0) {
         data.labels.forEach(label => {
           const option = document.createElement('option');
@@ -118,10 +98,10 @@
     }
   }
 
-  // 頁面載入時執行
   loadLabels();
 
-  fileUploadWrapper.addEventListener('click', () => {
+  fileUploadWrapper.addEventListener('click', (e) => {
+    e.preventDefault();
     fileInput.click();
   });
 
@@ -129,27 +109,68 @@
     const file = e.target.files[0];
     if (file) {
       fileName.textContent = file.name;
+      fileName.style.color = '#28a745';
+      fileName.style.fontWeight = 'bold';
     }
   });
 
-  fileUploadWrapper.addEventListener('dragover', (e) => {
+  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    document.body.addEventListener(eventName, preventDefaults, false);
+  });
+
+  function preventDefaults(e) {
     e.preventDefault();
+    e.stopPropagation();
+  }
+
+  ['dragenter', 'dragover'].forEach(eventName => {
+    fileUploadWrapper.addEventListener(eventName, highlight, false);
+  });
+
+  ['dragleave', 'drop'].forEach(eventName => {
+    fileUploadWrapper.addEventListener(eventName, unhighlight, false);
+  });
+
+  function highlight(e) {
     fileUploadWrapper.classList.add('dragover');
-  });
+    fileUploadWrapper.style.borderColor = '#007bff';
+    fileUploadWrapper.style.backgroundColor = '#e7f3ff';
+  }
 
-  fileUploadWrapper.addEventListener('dragleave', () => {
+  function unhighlight(e) {
     fileUploadWrapper.classList.remove('dragover');
-  });
+    fileUploadWrapper.style.borderColor = '#6c63ff';
+    fileUploadWrapper.style.backgroundColor = '';
+  }
 
-  fileUploadWrapper.addEventListener('drop', (e) => {
+  fileUploadWrapper.addEventListener('drop', handleDrop, false);
+
+  function handleDrop(e) {
     e.preventDefault();
-    fileUploadWrapper.classList.remove('dragover');
-    const files = e.dataTransfer.files;
+    e.stopPropagation();
+    
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    
     if (files.length > 0) {
+      const file = files[0];
+      if (!file.type.startsWith('image/')) {
+        status.textContent = 'Error: Please upload an image file';
+        status.style.color = '#721c24';
+        status.style.background = '#f8d7da';
+        return;
+      }
+      
       fileInput.files = files;
-      fileName.textContent = files[0].name;
+      
+      fileName.textContent = file.name;
+      fileName.style.color = '#28a745';
+      fileName.style.fontWeight = 'bold';
+      
+      status.textContent = '';
+      status.style.background = '';
     }
-  });
+  }
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -160,17 +181,22 @@
     try {
       const file = fileInput.files[0];
 
-      console.log(file)
-      console.log('Selected label ID:', labelSelect.value);
+      if (!file) {
+        throw new Error('Please select an image to upload');
+      }
+
+      if (!labelSelect.value) {
+        throw new Error('Please select a label');
+      }
 
       if (file.size > MAX_FILE_SIZE) {
-        throw new Error(`File size exceeds 10MB limit. Your file is ${(file.size / 1024 / 1024).toFixed(2)}MB`);
+        throw new Error(`File size exceeds 10MB limit. Your file is ${(file.size / 1024 / 1024).toFixed(10)}MB`);
       }
 
       const formData = new FormData();
       formData.append('image', file);
-      formData.append('label_id', labelSelect.value);  // 改成 label_id
-
+      formData.append('label_id', labelSelect.value);
+      
       const response = await fetch('/api/uploads', {
         method: 'POST',
         body: formData
@@ -184,7 +210,7 @@
 
       form.reset();
       fileName.textContent = '';
-      status.textContent = `Upload complete. Image ID: ${data.image_id}`;
+      status.textContent = `Upload complete! Image ID: ${data.image_id}`;
       status.style.color = 'green';
       status.style.background = '#d4edda';
 
@@ -220,6 +246,7 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 </script>
+
 </body>
 
 </html>

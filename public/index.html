@@ -10,8 +10,6 @@
   <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
   <link rel="stylesheet" href="style.css">
-
-
 </head>
 
 <body>
@@ -25,8 +23,6 @@
         <li><a href="upload.html"><i class="bi bi-cloud-upload"></i> Upload Image</a></li>
         <li><a href="labels.html"><i class="bi bi-tags"></i> Manage Labels</a></li>
         <li><a href="images.html"><i class="bi bi-image"></i> View Images</a></li>
-        <li><a href="labels.html"><i class="bi bi-tags"></i> View Images</a></li>
-        <li><a href="update.html"><i class="bi bi-image"></i> Update Images label</a></li>
       </ul>
     </nav>
     <br>
@@ -42,15 +38,13 @@
       </ul>
     </nav>
 
-  
+    <!-- Labeled Images Section -->
     <section class="images-section" id="labeled-images">
       <h2><i class="bi bi-collection"></i> Labeled Images</h2>
-
-      <!-- 3.LIST View Labeled Images ?? -->
-      <div id="status"></div>
-      <ul class="data-list" id="image-items"></ul>
-      <!-- 3.LIST View Labeled Images ?? -->
-      <div id="imagesGrid"></div>
+      <div id="status" class="status-message"></div>
+      
+      <!-- Grid Layout for Images (3 columns) -->
+      <div id="imagesGrid" class="images-grid-container"></div>
     </section>
 
     <div class="card mb-3 card-gradient-blue" id="purpose">
@@ -63,120 +57,153 @@
 
     <div class="card mb-3 card-gradient-purple" id="audience">
       <div class="card-body">
-        <h2><i class="bi bi-people-fill"></i> Audience</h2>
-        <p>Designed for instructors, student annotators, and researchers who need a lightweight, web-based tool for
-          quick dataset labeling in real-time.</p>
+        <h2><i class="bi bi-people-fill"></i> Target Audience</h2>
+        <p>Machine learning engineers, data scientists, and researchers who need to create labeled datasets for computer vision tasks.</p>
       </div>
     </div>
 
-    <div class="card mb-3 card-gradient-blue" id="workflow">
+    <div class="card mb-3" id="workflow">
       <div class="card-body">
-        <h2><i class="bi bi-arrow-repeat"></i> Workflow</h2>
+        <h2><i class="bi bi-diagram-3"></i> Workflow</h2>
         <ol>
-          <li><strong>Upload</strong>: Users upload images or data files.</li>
-          <li><strong>Labeling</strong>: Apply descriptive labels to each image.</li>
-          <li><strong>Review</strong>: Visualize the labeled dataset for accuracy.</li>
-          <li><strong>Export</strong>: Download the labeled dataset in CSV format for further analysis.</li>
+          <li>Upload images to the system</li>
+          <li>Create and manage labels</li>
+          <li>Annotate images with appropriate labels</li>
+          <li>Export labeled dataset for training</li>
         </ol>
-        <p><em>Best practice</em>: Regularly update the labels and track progress.</p>
       </div>
     </div>
 
-    <div class="card mb-3 card-gradient-purple" id="features">
+    <div class="card mb-3" id="features">
       <div class="card-body">
-        <h2><i class="bi bi-stars"></i> Features</h2>
+        <h2><i class="bi bi-star-fill"></i> Key Features</h2>
         <ul>
-          <li><strong>Upload Images</strong>: Easily drag and drop images into the interface.</li>
-          <li><strong>Label Images</strong>: Use a straightforward input field to add labels.</li>
-          <li><strong>Display Gallery</strong>: View uploaded images along with their corresponding labels.</li>
-          <li><strong>Export Functionality</strong>: Download labeled data as a CSV for model training.</li>
+          <li>Easy image upload and management</li>
+          <li>Flexible label creation and editing</li>
+          <li>Multi-label annotation support</li>
+          <li>Intuitive user interface</li>
+          <li>Fast and efficient workflow</li>
         </ul>
       </div>
     </div>
 
-    <div class="card mb-3 card-gradient-blue" id="technical-requirements">
+    <div class="card mb-3" id="technical-requirements">
       <div class="card-body">
-        <h2><i class="bi bi-cpu"></i> Technical Requirements</h2>
-        <p><strong>Browsers</strong>: Compatible with Chrome, Firefox, and Safari.</p>
-        <p><strong>Setup</strong>: Run the application locally or deploy on a server.</p>
+        <h2><i class="bi bi-gear-fill"></i> Technical Requirements</h2>
+        <ul>
+          <li>Modern web browser (Chrome, Firefox, Safari, Edge)</li>
+          <li>JavaScript enabled</li>
+          <li>Stable internet connection</li>
+        </ul>
       </div>
     </div>
 
-    <div class="card mb-3 card-gradient-purple" id="faq">
+    <div class="card mb-3" id="faq">
       <div class="card-body">
-        <h2><i class="bi bi-patch-question"></i> FAQ</h2>
-        <p><strong>What image formats are supported?</strong> JPG, PNG, and GIF.</p>
-        <p><strong>Is there a file size limit?</strong> Yes, each file should not exceed 10MB.</p>
+        <h2><i class="bi bi-question-circle-fill"></i> FAQ</h2>
+        <details>
+          <summary>What image formats are supported?</summary>
+          <p>We support JPEG, PNG, and GIF formats.</p>
+        </details>
+        <details>
+          <summary>Can I edit labels after creation?</summary>
+          <p>Yes, you can edit or delete labels at any time.</p>
+        </details>
+        <details>
+          <summary>Is there a limit on image size?</summary>
+          <p>Images should be under 10MB for optimal performance.</p>
+        </details>
       </div>
     </div>
-
-    <button id="backToTop" class="btn-back-to-top" aria-label="back to top" title="back to top">
-      <div class="btn-content">
-        <i class="bi bi-arrow-up-circle-fill"></i>
-        <span class="btn-text">
-          <h2>TOP</h2>
-        </span>
-      </div>
-      <div class="btn-ripple"></div>
-      <div class="btn-progress"></div>
-    </button>
   </div>
 
-  <!-- Bootstrap 5 JS Bundle -->
+  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="script.js"></script>
   
 
   <script>
-        const listEl = document.getElementById('image-items');
-        const statusEl = document.getElementById('status');
+    const imagesGrid = document.getElementById('imagesGrid');
+    const statusEl = document.getElementById('status');
 
-        async function loadImages() {
-            listEl.innerHTML = '';
-            statusEl.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Loading images...';
-            statusEl.className = 'alert alert-info';
 
-            try {
-                const response = await fetch('/api/images');
-                const data = await response.json();
-            if (!response.ok) {
-                throw new Error(data.error || 'Failed to load images');
-            }
-            if (!data.images || data.images.length === 0) {
-                statusEl.innerHTML = /*html*/ `No images uploaded yet. <a href="upload.html">Upload one now</a>`;
-                return;
-            }
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('Page loaded, loading labeled images...');
+      loadLabeledImages();
+    });
 
-            statusEl.textContent = `Total ${data.images.length} images`;
-            for (const image of data.images) {
-                const item = document.createElement('li');
-                item.className = 'data-item mb-3 p-3 border rounded';
-                item.innerHTML = /*html*/ `
-                <a href="image.html?id=${encodeURIComponent(image.id)}" class="list-link images-item">
-                        <img
-                     src="/uploads/${encodeURIComponent(image.filename)}" 
-                     alt="Preview of ${(image.filename)}"                 
-                     class="thumbnail"
-                     loading="lazy"
-                        >
-                     <span class="image-meta">
-                     <span class="primary">${image.filename}</span>
-                     <span class="secondary">
-                        Uploaded on ${new Date(image.upload_time).toLocaleString()}. ${image.labels_count} labels
-                      </span>
-                     </span>
-                </a>
-                `;
-                listEl.appendChild(item);
-            }
-        } catch (error) {
-            statusEl.textContent = error instanceof Error ? error.message : String(error);
-            statusEl.className = 'alert alert-danger';
+    // Load all labeled images
+    async function loadLabeledImages() {
+      console.log(' Loading labeled images...');
+      imagesGrid.innerHTML = '';
+      statusEl.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Loading images...';
+      statusEl.className = 'status-message';
+
+      try {
+        const response = await fetch('/api/images');
+        if (!response.ok) throw new Error('Failed to load images');
+
+        const data = await response.json();
+        statusEl.innerHTML = '';
+
+        if (!data.images || data.images.length === 0) {
+          statusEl.innerHTML = '<div class="alert-info"><i class="bi bi-info-circle"></i> No labeled images yet. Start by uploading some images!</div>';
+          return;
         }
+
+        statusEl.innerHTML = `<div class="label-count-badge">Total ${data.images.length} images</div>`;
+        console.log('Images loaded:', data.images.length);
+
+
+        for (const img of data.images) {
+          const card = createImageCard(img);
+          imagesGrid.appendChild(card);
+        }
+      } catch (error) {
+        console.error('Load images error:', error);
+        statusEl.innerHTML = '<div class="alert-danger"><i class="bi bi-exclamation-triangle"></i> Failed to load images. Please check if the server is running.</div>';
+        statusEl.className = 'status-message error';
+      }
     }
 
-    loadImages();
-</script>
-</body>
+    // Create image card element
+    function createImageCard(img) {
+      const card = document.createElement('div');
+      card.className = 'image-grid-card';
+      
+      const thumbnailUrl = `/uploads/${img.filename}`;
+      
+      card.innerHTML = `
+        <div class="image-grid-card-inner">
+          <div class="image-grid-thumbnail">
+            <img src="${thumbnailUrl}" 
+                 alt="${escapeHtml(img.filename)}" 
+                 onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23e5e7eb%22 width=%22100%22 height=%22100%22/%3E%3Ctext fill=%22%239ca3af%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2214%22%3ENo Image%3C/text%3E%3C/svg%3E'">
+          </div>
+          <div class="image-grid-info">
+            <div class="image-grid-title">${escapeHtml(img.filename)}</div>
+            <div class="image-grid-meta">
+              <span class="meta-badge">
+                <i class="bi bi-tags"></i> ${img.labels_count || 0} label(s)
+              </span>
+            </div>
+            <div class="image-grid-actions">
+              <a href="image.html?id=${img.id}" class="btn btn-sm btn-gradient-primary w-100">
+                <i class="bi bi-eye"></i> View Details
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      return card;
+    }
 
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+  </script>
+</body>
 </html>
