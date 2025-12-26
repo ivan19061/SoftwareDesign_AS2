@@ -1,53 +1,23 @@
-# Visualize on https://erd.surge.sh
-# or https://quick-erd.surge.sh
-#
-# Relationship Types
-#  -    - one to one
-#  -<   - one to many
-#  >-   - many to one
-#  >-<  - many to many
-#  -0   - one to zero or one
-#  0-   - zero or one to one
-#  0-0  - zero or one to zero or one
-#  -0<  - one to zero or many
-#  >0-  - zero or many to one
-#
-////////////////////////////////////
-
-
 image
------
-id integer PK
-filename text unique
+---
+id pk
+filename text
 file_size integer
 mime_type text
 upload_time integer
-description text
-
+description text null
+annotation_time integer null
 
 label
------
-id integer PK
+---
+id pk
 name text unique
+description text null
 created_time integer
 
-
 image_label
------------
-id integer PK
-image_id integer FK >0- image.id
-label_id integer FK >0- label.id
-annotion_time integer
-
-
-# zoom: 1.000
-# view: (-436, -511)
-# text-bg: #6495ed
-# text-color: #000000
-# diagram-bg: #f5f5f5
-# diagram-text: #000000
-# table-bg: #ffffff
-# table-text: #000000
-# image (297, -491)
-# label (301, -230)
-# image_label (-153, -411)
+---
+id pk
+image_id fk
+label_id fk
+annotation_time integer null

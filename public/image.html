@@ -170,7 +170,7 @@
             }
 
             titleEl.textContent = data.image.filename;
-            descEl.innerHTML = `<i class="bi bi-calendar-event"></i> Uploaded on ${new Date(data.image.upload_time).toLocaleString()}`;
+            descEl.innerHTML = `<i class="bi bi-calendar-event"></i> Uploaded on ${new Date(data.image.annotation_time).toLocaleString()}`;
             imageEl.src = `/uploads/${encodeURIComponent(data.image.filename)}`;
             imageEl.hidden = false;
             renderAssignedLabels(data.labels);

@@ -176,7 +176,7 @@
                 const item = document.createElement('li');
                 item.className = 'data-item';
                 
-                const createdDate = new Date(label.created_time).toLocaleString();
+                const createdDate = new Date(label.created_at).toLocaleString();
                 const labelInitial = label.name.charAt(0).toUpperCase();
                 
                 item.innerHTML = `

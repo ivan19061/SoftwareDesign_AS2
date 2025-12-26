@@ -4,13 +4,13 @@ import { db } from "../db"
 let annotationRoute = Router()
 
 let find_image = db.prepare(/*sql*/`
-    SELECT id, filename, upload_time
+    SELECT id, filename, annotation_time
     FROM image
     WHERE id = :id
 `)
 
 let find_label_by_id = db.prepare(/*sql*/`
-    SELECT id, name, created_time
+    SELECT id, name, created_time    -- ✅ 改為 created_time
     FROM label
     WHERE id = :id
 `)
@@ -72,7 +72,7 @@ annotationRoute.post('/images/:imageId/labels', (req, res) => {
             return
         }
 
-        let annotation_time = Date.now()
+        let annotation_time = Math.floor(Date.now() / 1000)  // ✅ 改為 Unix timestamp (秒)
         let result = insert_image_label.get({ image_id, label_id, annotation_time })
         
         res.status(201)

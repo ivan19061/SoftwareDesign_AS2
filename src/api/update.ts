@@ -16,7 +16,7 @@ let update_label_name = db.prepare(/*sql*/`
 `)
 
 let find_image_by_id = db.prepare(/*sql*/`
-    SELECT id, filename, description, upload_time
+    SELECT id, filename, description, annotation_time
     FROM image
     WHERE id = :id
 `)

@@ -7,30 +7,42 @@ import { join, extname } from "path"
 let imageRoute = Router()
 
 let insert_images = db.prepare(/*sql*/`
-    INSERT INTO image (filename, file_size, mime_type)
-    VALUES (:filename, :file_size, :mime_type)
+    INSERT INTO image (filename, file_size, mime_type, upload_time)
+    VALUES (:filename, :file_size, :mime_type, :upload_time)
     RETURNING id
 `)
 
 let insert_image_label = db.prepare(/*sql*/`
-    INSERT INTO image_label (image_id, label_id)
-    VALUES (:image_id, :label_id)
+    INSERT INTO image_label (image_id, label_id, annotation_time)
+    VALUES (:image_id, :label_id, :annotation_time)
+`)
+
+// ✅ 添加這個缺少的 prepared statement
+let list_image_labels = db.prepare(/*sql*/`
+    SELECT 
+        label.id,
+        label.name,
+        label.created_time,
+        image_label.annotation_time
+    FROM image_label
+    JOIN label ON image_label.label_id = label.id
+    WHERE image_label.image_id = :image_id
 `)
 
 let list_images = db.prepare(/*sql*/`
     SELECT 
         image.id,
         image.filename,
-        image.upload_time,
+        image.annotation_time,
         COUNT(image_label.id) AS labels_count 
     FROM image
     LEFT JOIN image_label ON image.id = image_label.image_id
     GROUP BY image.id 
-    ORDER BY image.upload_time DESC
+    ORDER BY image.annotation_time DESC
 `)
 
 let find_image = db.prepare(/*sql*/`
-    SELECT id, filename, upload_time, description
+    SELECT id, filename, annotation_time, description
     FROM image
     WHERE id = :id 
 `)
@@ -51,17 +63,23 @@ let delete_image_labels = db.prepare(/*sql*/`
     WHERE image_id = :image_id
 `)
 
-let list_image_labels = db.prepare(/*sql*/`
+let select_image_with_labels = db.prepare(/*sql*/`
     SELECT 
-        label.id AS label_id, 
-        label.name,
-        label.created_time,
-        image_label.id AS image_label_id,
-        image_label.annotation_time
-    FROM image_label
-    JOIN label ON label.id = image_label.label_id
-    WHERE image_label.image_id = :image_id
-    ORDER BY label.name COLLATE NOCASE 
+        image.id,
+        image.filename,
+        image.file_size,
+        image.mime_type,
+        image.upload_time,
+        image.description,
+        image.annotation_time,
+        label.id as label_id,
+        label.name as label_name,
+        label.created_time,   
+        image_label.annotation_time as label_annotation_time
+    FROM image
+    LEFT JOIN image_label ON image.id = image_label.image_id
+    LEFT JOIN label ON image_label.label_id = label.id
+    WHERE image.id = :id
 `)
 
 imageRoute.post('/uploads', async (req, res) => {
@@ -79,15 +97,21 @@ imageRoute.post('/uploads', async (req, res) => {
             throw new Error('Invalid or missing label_id');
         }
 
+        let upload_time = Math.floor(Date.now() / 1000)
+        
         let result = insert_images.get({ 
             filename: filename, 
             file_size: files?.image?.[0]?.size, 
-            mime_type: files?.image?.[0]?.mimetype 
+            mime_type: files?.image?.[0]?.mimetype,
+            upload_time: upload_time
         }) as any;
 
+        let annotation_time = Math.floor(Date.now() / 1000)
+        
         insert_image_label.run({
             image_id: result.id,
-            label_id: Number(labelId)
+            label_id: Number(labelId),
+            annotation_time: annotation_time
         });
 
         res.status(201)

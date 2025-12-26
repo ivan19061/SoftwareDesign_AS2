@@ -1,13 +1,16 @@
-import type { Knex } from "knex";
+exports.up = async function(knex) {
+  // 刪除舊表（如果存在）
+  await knex.schema.dropTableIfExists('image_label');
+  await knex.schema.dropTableIfExists('label');
+  await knex.schema.dropTableIfExists('image');
 
-export async function up(knex: Knex): Promise<void> {
   // 創建 image 表
   await knex.schema.createTable('image', (table) => {
     table.increments('id').primary();
     table.text('filename').notNullable();
     table.integer('file_size').notNullable();
     table.text('mime_type').notNullable();
-    table.integer('upload_time').notNullable().defaultTo(knex.raw('unixepoch()'));
+    table.integer('upload_time').notNullable();
     table.text('description').nullable();
     table.integer('annotation_time').nullable();
   });
@@ -16,25 +19,26 @@ export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTable('label', (table) => {
     table.increments('id').primary();
     table.text('name').notNullable().unique();
-    table.integer('created_time').notNullable().defaultTo(knex.raw('unixepoch()'));
+    table.integer('created_time').notNullable();
+    table.text('description').nullable();
   });
 
-  // 創建 image_label 表
+  // 創建 image_label 表（關聯表）
   await knex.schema.createTable('image_label', (table) => {
     table.increments('id').primary();
     table.integer('image_id').notNullable()
       .references('id').inTable('image').onDelete('CASCADE');
     table.integer('label_id').notNullable()
       .references('id').inTable('label').onDelete('CASCADE');
-    table.integer('annotation_time').notNullable().defaultTo(knex.raw('unixepoch()'));
-    
-    // 確保同一個圖片不會有重複的標籤
+    table.integer('annotation_time').notNullable();
     table.unique(['image_id', 'label_id']);
   });
-}
 
-export async function down(knex: Knex): Promise<void> {
+  console.log('✅ All tables created successfully');
+};
+
+exports.down = async function(knex) {
   await knex.schema.dropTableIfExists('image_label');
   await knex.schema.dropTableIfExists('label');
   await knex.schema.dropTableIfExists('image');
-}
+};

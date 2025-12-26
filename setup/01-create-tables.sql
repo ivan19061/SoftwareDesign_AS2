@@ -3,14 +3,14 @@ CREATE TABLE IF NOT EXISTS image (
     filename TEXT NOT NULL UNIQUE,
     file_size INTEGER NOT NULL,
     mime_type TEXT NOT NULL,
-    upload_time INTEGER DEFAULT (strftime('%s', 'now') * 1000),
+    annotation_time INTEGER DEFAULT (strftime('%s', 'now') * 1000),
     description TEXT
 );
 
 CREATE TABLE IF NOT EXISTS label (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL UNIQUE,
-    created_time INTEGER DEFAULT (strftime('%s', 'now') * 1000)
+    created_at INTEGER DEFAULT (strftime('%s', 'now') * 1000)
 );
 
 CREATE TABLE IF NOT EXISTS image_label (
