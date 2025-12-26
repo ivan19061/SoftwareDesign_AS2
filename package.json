@@ -12,6 +12,7 @@
  "scripts": {
   "test": "echo \"Error: no test specified\" && exit 1",
   "db:ui": "erd-ui erd.txt",
+  "db seed": "ts-node ./seed/seed.ts",
   "db:setup": "npm run db:migrate && ts-node ./seed/seed.ts",
   "db:dev": "run-s db:migrate db:plan db:update",
   "db:migrate": "knex migrate:latest",

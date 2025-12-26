@@ -1,6 +1,6 @@
 import { Router } from "express"
 import { Formidable } from 'formidable'
-import { db } from "../db"
+import { db } from "../../db"
 import { unlink, rename } from "fs/promises"
 import { join, extname } from "path"
 
