@@ -2,7 +2,7 @@ import { del, seedRow } from "better-sqlite3-proxy";
 import { proxy } from "../proxy";
 import { db } from "../db";
 
-console.log('\n🗑️  Cleaning old data...\n');
+console.log('\nCleaning old data...\n');
 
 db.exec(/*sql*/`
   DELETE FROM image_label;

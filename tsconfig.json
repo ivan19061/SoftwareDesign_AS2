@@ -22,7 +22,7 @@
     "migrations/**/*",
     "seed/**/*",
     "knexfile.ts"
-, "db.ts"  ],
+, "db.ts", "server.ts"  ],
   "exclude": [
     "node_modules",
     "dist"

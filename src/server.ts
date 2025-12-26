@@ -1,11 +1,11 @@
 import express from 'express'
 import cors from "cors"
-import { annotationRoute } from './api/annotation'
-import { imageRoute } from './api/image'
-import { labelRoute } from './api/label'
-import { updateRoute } from './api/update'
+import { annotationRoute } from '../src/api/annotation'
+import { imageRoute } from '../src/api/image'
+import { labelRoute } from '../src/api/label'
+import { updateRoute } from '../src/api/update'
 
-const app = express()
+let app = express()
 
 app.use(cors())
 app.use(express.json())
